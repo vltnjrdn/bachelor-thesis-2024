@@ -29,13 +29,14 @@ rho <- 0
 mu_m <- 0
 
 # choose directory
-wd <- 'C:/Users/Valentina/OneDrive - Universitaet Bern/Bachelor/simBIM'
+wd <- './BIM_simulation/'
 setwd(wd)
 
 # generate target directory for the 25 plots and the gtable(matrix with all 25 plots)
 folder_name <- sprintf('Simulation_Pexp_Mconf_%.d__%s',
                        ntrial,
                        format(Sys.time(), '%Y.%m.%d_%H.%M.%S'))
+
 dir.create(folder_name, showWarnings = FALSE)
 setwd(folder_name)
 
