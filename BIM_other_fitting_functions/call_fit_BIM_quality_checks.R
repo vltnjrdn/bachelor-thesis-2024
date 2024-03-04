@@ -1,12 +1,28 @@
 # function for quality checks. Can be used to compare different fit_BIM functions.
-# runs the fit_BIM function n_interation times for the same data set and computes the mean values and variances for the fitted parameters and the logL
-# runs the fit_BIM function again n_iteration times for the same data set to measure the mean and the variance of the elapsed time
+# runs the fit_BIM function n_iteration times for the same data set and computes the mean values and variances for the fitted parameters and the logL
+# runs the fit_BIM function n_iteration times for the same data set to measure the mean and the variance of the elapsed time
 
-fit_result <- fit_bim(observed_data, padding = 0)
-print(fit_result)
-class(observed_data)
+## INPUTS
+# * observed_data
+#
+# Could be any data frame, we recommend using the test file
+#
+# * n-iteration
+# number of iterations the function runs through the same data set
 
-### quality checks
+## OUTPUTS
+#
+# * mean and variances of the parameters from fitting the function n_iteration times
+#
+# * mean and variances of the logL from fitting the function n_iteration times
+#
+# * mean and variances of the elapsed time per iteration of fitting the function n_iteration times
+
+
+## read data
+
+filepath <- '../BIM_Main_Fitting_Function/Observed_Data_Example.txt'
+observed_data <- as.data.frame(read.csv(filepath))
 
 ## number of iterations
 n_iterations <- 100
@@ -52,7 +68,6 @@ cat(
   logL_var,
   '\n'
 )
-
 
 ## time measurement
 

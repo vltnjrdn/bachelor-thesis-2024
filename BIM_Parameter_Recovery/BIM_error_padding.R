@@ -1,5 +1,5 @@
 # The error function with padding correction for BIM applied to recall tasks with continuous confidence.
-# Please do not run this function directly. Instead, use the function call_fit_BIM.
+# Please do not run this function directly. Use Parameter_Recovery(_filtered_data) instead.
 
 bim_error_padding <- function(params, observed_data) {
   ## get data and parameters

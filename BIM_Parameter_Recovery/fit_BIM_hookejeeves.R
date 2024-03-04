@@ -1,13 +1,11 @@
-# install.packages("DEoptim")
-# install.packages("adiago")
-library(DEoptim)
+# The fitting function for BIM applied to recall tasks with continuous confidence.
+# Please do not run this function directly. Use Parameter_Recovery instead.
+
+# install.packages("adagio")
 library(adagio)
 
-# The fitting function for BIM applied to recall tasks with continuous confidence.
-# Please do not run this function directly. Use the call_fit_BIM function instead.
-
 fit_bim <- function(observed_data, padding) {
-  # define warnings
+  #define warnings
   w <- 0
 
   if (!exists('padding') || is.null(padding)) {
@@ -40,17 +38,6 @@ fit_bim <- function(observed_data, padding) {
   lb <- c(0, 0, -5, -1)
   ub <- c(1, 1, 5, 1)
 
-  # fit the model with DEoptim
-  DEoptim_output <- DEoptim(
-    fn = function(params)
-      bim_error(params, observed_data),
-    lower = lb,
-    upper = ub,
-    control = list(trace = FALSE)
-  )
-
-  params <- DEoptim_output$optim$bestmem
-
   # fit the model with hookejeeves
   hj_output <- hookejeeves(
     x0 = params,
@@ -68,20 +55,9 @@ fit_bim <- function(observed_data, padding) {
 
   # if padding == 1, fit the model again with padding correction
   if (padding == 1) {
-    # fit the model with DEoptim (padding)
-    DEoptim_output <- DEoptim(
-      fn = function(params)
-        bim_error(params, observed_data),
-      lower = lb,
-      upper = ub,
-      control = list(trace = FALSE)
-    )
-
-    params_padding <- DEoptim_output$optim$bestmem
-
     # fit the model with hookejeeves (padding)
-    hj_output <- hookejeeves(
-      x0 = params_padding,
+    hj_output_padding <- hookejeeves(
+      x0 = params,
       f = function(params)
         bim_error(params, observed_data),
       lb = lb,
@@ -92,7 +68,7 @@ fit_bim <- function(observed_data, padding) {
       info = FALSE
     )
 
-    params_padding <- hj_output$xmin
+    params_padding <- hj_output_padding$xmin
 
     # extract rho
     params[4] <- params_padding[4]
@@ -108,5 +84,9 @@ fit_bim <- function(observed_data, padding) {
   err <- bim_error(params, observed_data)
   logL <- -err
 
-  return(list(params = params, logL = logL, w = w))
+  # create a matrix to store parameters along with their respective names
+  params_matrix <- matrix(params, nrow = 1, byrow = TRUE)
+  colnames(params_matrix) <- c('Pexp', 'Mconf', 'mu_m', 'rho')
+
+  return(list(params = params_matrix, logL = logL, w = w))
 }

@@ -1,5 +1,5 @@
 # The error function with padding correction for BIM applied to recall tasks with continuous confidence.
-# Please do not run this function directly. Instead, use the function call_fit_BIM.
+# Please do not run this function directly. Instead, use call_multiple_fit_BIM.
 
 bim_error_padding <- function(params, observed_data) {
   ## get data and parameters
@@ -17,14 +17,10 @@ bim_error_padding <- function(params, observed_data) {
   ntrial <- length(conf)
 
   # check bounds for parameters
-  if (rho < -0.99 ||
-      rho > 0.99 ||
-      Pexp < 0.01 ||
-      Pexp > 0.99 ||
-      Mconf < 0.01 ||
-      Mconf > 0.99 ||
-      mu_m < -5 ||
-      mu_m > 5) {
+  if (rho < -0.99 || rho > 0.99 ||
+      Pexp < 0.01 || Pexp > 0.99 ||
+      Mconf < 0.01 || Mconf > 0.99 ||
+      mu_m < -5 || mu_m > 5) {
     err <- 10000
     return(err)
   }

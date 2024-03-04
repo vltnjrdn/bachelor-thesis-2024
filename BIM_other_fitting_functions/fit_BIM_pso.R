@@ -1,9 +1,11 @@
 #install.packages("pso")
-
 library(pso)
 
+# The fitting function for BIM applied to recall tasks with continuous confidence.
+# Please do not run this function directly. Use the call_fit_BIM function instead.
+
 fit_bim <- function(observed_data, padding) {
-  #define warnings
+  # define warnings
   w <- 0
 
   if (!exists('padding') || is.null(padding)) {
@@ -53,8 +55,7 @@ fit_bim <- function(observed_data, padding) {
 
   params <- psoptim_output$par
 
-  ## if padding == 1, fit the model again with padding correction
-
+  # if padding == 1, fit the model again with padding correction
   if (padding == 1) {
     # paricle swarm optimization (padding)
     psoptim_output_padding <- psoptim(
@@ -87,7 +88,5 @@ fit_bim <- function(observed_data, padding) {
   err <- bim_error(params, observed_data)
   logL <- -err
 
-  return(list(params = params,
-              logL = logL,
-              w = w))
+  return(list(params = params, logL = logL, w = w))
 }

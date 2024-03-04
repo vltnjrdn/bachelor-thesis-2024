@@ -1,5 +1,5 @@
 # The error function for BIM applied to recall tasks with continuous confidence.
-# Please do not run this function directly. Use the call_fit_BIM function instead.
+# Please do not run this function directly. Use the call_multiple_fit_BIM function instead.
 
 bim_error <- function(params, observed_data) {
   ## get data and parameters

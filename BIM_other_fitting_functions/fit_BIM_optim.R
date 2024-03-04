@@ -1,6 +1,8 @@
 # install.packages("numDeriv")
-
 library(numDeriv)
+
+# The fitting function for BIM applied to recall tasks with continuous confidence.
+# Please do not run this function directly. Use the call_fit_BIM function instead.
 
 fit_bim <- function(observed_data, padding) {
   #define warnings
@@ -114,7 +116,5 @@ fit_bim <- function(observed_data, padding) {
   err <- bim_error(params, observed_data)
   logL <- -err
 
-  return(list(params = params,
-              logL = logL,
-              w = w))
+  return(list(params = params, logL = logL, w = w))
 }

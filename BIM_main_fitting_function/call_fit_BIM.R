@@ -1,15 +1,16 @@
 # Fit BIM to data from recall tasks with continuous confidence ratings on a continuous scale.
+# This function requires BIM_error, BIM_error_padding and fit_BIM to be loaded into the global environment.
+# Can be used with any version of the BIM fitting function.
 
 ## INPUTS
 # * observed_data
 #
-# N-by-2 matrix containing data of confidence ratings and recall performance.
+# N-by-2 dataframe containing data of confidence ratings and recall performance.
 # N represents the total number of trials, and each row represents a trial.
 # The first column is confidence rating and the second column is recall performance in each trial.
 #
 # Confidence ratings should be on a continuous scale from 0 (not confident at all) to 100 (completely confident).
-# Recall performance should be 0(incorrect) or 1 (correct).
-#
+# Recall performance should be 0 (incorrect) or 1 (correct).
 #
 # * padding
 #
@@ -19,7 +20,7 @@
 # (i.e., > 0.98 or < -0.98) with padding = 0.
 # Padding correction can slightly improve the performance of parameter recovery.
 
-# OUTPUTS
+## OUTPUTS
 #
 # * params
 #
@@ -33,5 +34,10 @@
 # w = 1 when any warning message is triggered.
 # w = 0 when there is no warning message.
 
+# read your observed data
+filepath <- '../BIM_Main_Fitting_Function/Observed_Data_Example.txt'
+observed_data <- as.data.frame(read.csv(filepath))
+
+# fit the model
 fit_result <- fit_bim(observed_data, padding = 0)
 print(fit_result)

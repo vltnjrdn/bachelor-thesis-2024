@@ -1,29 +1,25 @@
 # The error function for BIM applied to recall tasks with continuous confidence.
-# Please do not run this function directly. Use the call_fit_BIM function instead.
+# Please do not run this function directly. Use Parameter_Recovery(_filtered_data) instead.
 
 bim_error <- function(params, observed_data) {
-  ## get data and parameters
-  # parameters
+
+  # get parameters
   Pexp <- params[1]
   Mconf <- params[2]
   mu_m <- params[3]
   rho <- params[4]
 
-  # data
+  # get data
   conf <- observed_data[, 1]
   rec <- observed_data[, 2]
 
   ntrial <- length(conf)
 
   # check bounds for parameters
-  if (rho < -0.99 ||
-      rho > 0.99 ||
-      Pexp < 0.01 ||
-      Pexp > 0.99 ||
-      Mconf < 0.01 ||
-      Mconf > 0.99 ||
-      mu_m < -5 ||
-      mu_m > 5) {
+  if (rho < -0.99 || rho > 0.99 ||
+      Pexp < 0.01 || Pexp > 0.99 ||
+      Mconf < 0.01 || Mconf > 0.99 ||
+      mu_m < -5 || mu_m > 5) {
     err <- 10000
 
     return(err)
@@ -55,18 +51,17 @@ bim_error <- function(params, observed_data) {
   # calculate the likelihood of recall for each trial and each x0 in the grid
   lik_rec <- (1 - pnorm(0, mu_m + rho * X0, sqrt(1 - rho ^ 2)))
 
-  ## calculate the the predicted confidence for each trial and each x0 in the grid
+  # calculate the the predicted confidence for each trial and each x0 in the grid
   pred_conf <- pnorm(X0 * a + b)
 
-  # calculate the overall log likelihood for each trial by
-  # multiplication of the likelihood of x0, the probability of the observed confidence given the predicted confidence
-  # and the likelihood of recall or no recall
+  # calculate the likelihood for each trial by multiplication of the likelihood of x0,
+  # the probability of the observed confidence given the predicted confidence and the likelihood of recall or no recall
   grid_loglik <- npdf_x0 *
                  dnorm(conf_new, pred_conf, 0.025) *
                  (rec_new * lik_rec + (1 - rec_new) *
                  (1 - lik_rec))
 
-  # Check whether some of the row_sums in the loglik_padding grid = 0 and extract their indices
+  # check whether some of the row_sums in the loglik_padding grid = 0 and extract their indices
   row_sums <- rowSums(grid_loglik)
   zero_indices <- which(row_sums == 0)
 
@@ -75,9 +70,10 @@ bim_error <- function(params, observed_data) {
     grid_loglik[zero_indices, ] <- grid_loglik[zero_indices, ] + 1e-10
   }
 
+  # calculate the overall loglikelyhood
   loglik <- log(rowSums(grid_loglik))
 
-  #calculate error
+  # calculate error
   err <- (-1) * sum(loglik)  # sum of negative log likelihood
 
   return(err)
